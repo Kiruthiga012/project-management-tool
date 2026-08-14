@@ -119,6 +119,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -174,4 +175,8 @@
       max-width: 1280px; /* Standard content width */
     }
   }
+}
+
+@layer utilities {
+  .font-display { font-family: "Manrope", ui-sans-serif, system-ui, sans-serif; }
 }

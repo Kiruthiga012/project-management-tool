@@ -1,42 +1,38 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import DashboardLayout from "@/components/DashboardLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import MyTasks from "./pages/MyTasks";
+import NotificationsPage from "./pages/Notifications";
+import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import Projects from "./pages/Projects";
+import ProjectWorkspace from "./pages/ProjectWorkspace";
+import SettingsPage from "./pages/Settings";
+import Team from "./pages/Team";
+import { Route, Switch } from "wouter";
+
+function ProtectedPage({ children }: { children: React.ReactNode }) {
+  return <DashboardLayout>{children}</DashboardLayout>;
+}
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+  return <Switch>
+    <Route path="/">{() => <ProtectedPage><Home /></ProtectedPage>}</Route>
+    <Route path="/projects">{() => <ProtectedPage><Projects /></ProtectedPage>}</Route>
+    <Route path="/projects/:id">{() => <ProtectedPage><ProjectWorkspace /></ProtectedPage>}</Route>
+    <Route path="/my-tasks">{() => <ProtectedPage><MyTasks /></ProtectedPage>}</Route>
+    <Route path="/team">{() => <ProtectedPage><Team /></ProtectedPage>}</Route>
+    <Route path="/notifications">{() => <ProtectedPage><NotificationsPage /></ProtectedPage>}</Route>
+    <Route path="/profile">{() => <ProtectedPage><Profile /></ProtectedPage>}</Route>
+    <Route path="/settings">{() => <ProtectedPage><SettingsPage /></ProtectedPage>}</Route>
+    <Route path="/404">{() => <ProtectedPage><NotFound /></ProtectedPage>}</Route>
+    <Route>{() => <ProtectedPage><NotFound /></ProtectedPage>}</Route>
+  </Switch>;
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
+export default function App() {
+  return <ErrorBoundary><ThemeProvider defaultTheme="light"><TooltipProvider><Toaster richColors position="top-right" /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
 }
-
-export default App;
